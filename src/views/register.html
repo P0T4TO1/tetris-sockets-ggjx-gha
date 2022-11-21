@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/assets/bootstrap/css/mdb.min.css" />
+    <link rel="shortcut icon" href="/images/tetris-logo.png" />
+    <title>Tetris 1v1 | Nickname</title>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-light">
+      <div class="container-fluid px-5">
+        <div class="navbar-brand" href="#">
+          <img
+            src="/images/tetris-logo.png"
+            class="me-2"
+            height="30"
+            alt="logo"
+            loading="lazy"
+          />
+          <small class="text-light">Tetris 1v1</small>
+        </div>
+      </div>
+    </nav>
+
+    <main class="flex-grow-1 d-flex flex-column justify-content-center">
+      <section class="gradient-custom">
+        <div class="container py-2 h-100">
+          <div
+            class="row d-flex justify-content-center align-items-center h-100"
+          >
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+              <div
+                class="card text-white w-75 m-auto"
+                style="border-radius: 1rem; background-color: #212020"
+              >
+                <div class="card-body p-5 text-center">
+                  <form class="needs-validation" novalidate>
+                    <h2 class="fw-bold mb-2 text-uppercase">Tetris 1v1</h2>
+                    <div class="form-outline form-white mb-4 mt-3">
+                      <input
+                        type="text"
+                        id="username"
+                        class="form-control form-control-lg"
+                        required
+                      />
+                      <label class="form-label" for="username">Nickname</label>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Please provide a valid city.</div>
+                    </div>
+                    <p>Nombre de la sala de juego</p>
+                    <div class="form-outline form-white mb-4 mt-3">
+                      <input
+                        type="text"
+                        id="roomName"
+                        class="form-control form-control-lg"
+                        required
+                      />
+                      <label class="form-label" for="roomName">Sala</label>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Please provide a valid city.</div>
+                    </div>
+
+                    <button
+                      class="btn btn-success btn-lg btn-block"
+                      id="btnLogin"
+                      type="button"
+                    >
+                      Jugar
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-light text-center">
+      <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+        © 2022 Copyright:
+        <a class="text-dark" href="#">Sin copy</a>
+      </div>
+    </footer>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/assets/bootstrap/js/sweetalert2.all.min.js"></script>
+    <script src="/assets/bootstrap/js/mdb.min.js"></script>
+    <script src="/js/login.js"></script>
+  </body>
+</html>
