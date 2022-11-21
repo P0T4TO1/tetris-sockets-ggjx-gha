@@ -295,7 +295,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
       document.removeEventListener("keyup", control);
       clearInterval(timerId);
-      socket.emit("sendMessageWin", null);
       Swal.fire({
         title: "Game Over",
         text: "Juego terminado",
@@ -303,27 +302,9 @@ document.addEventListener("DOMContentLoaded", () => {
           "https://i.gifer.com/origin/81/81ab221b64e4bdbc3c32079af661d69c_w200.gif",
         imageWidth: 300,
         imageHeight: 250,
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "Iniciar nuevo juego",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          socket.emit("sendReloadAll", null);
-          location.reload();
-        }
       });
     }
   }
-
-  socket.on("messageWin", () => {
-    Swal.fire({
-      title: "Victory Royale",
-      text: "Haz ganado!!!!. El juego se reiniciara cuando el perdedor este listo",
-      imageUrl:
-        "https://media3.giphy.com/media/58Mqi7C6PJzqPhYkGn/giphy.gif?cid=790b7611b155ff3a08a891a1b924c65bfd77cd6b006bcecd&rid=giphy.gif&ct=s",
-      imageWidth: 300,
-      imageHeight: 200,
-    });
-  });
 
   socket.on("reloadAll", () => {
     location.reload();
@@ -331,7 +312,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // end game
   socket.on("endGame", () => {
-    freeze();
+    gameOver();
   });
 
   socket.on("messageConnected", (message) => {
@@ -344,10 +325,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   socket.on("fullRoom", () => {
     Swal.fire({
-      title: "Error",
+      title: "Sala llena",
       text: "La sala esta llena",
-      imageUrl:
-        "https://media3.giphy.com/media/58Mqi7C6PJzqPhYkGn/giphy.gif?cid=790b7611b155ff3a08a891a1b924c65bfd77cd6b006bcecd&rid=giphy.gif&ct=s",
+      imageUrl: "/images/thegrefg.gif",
       imageWidth: 300,
       imageHeight: 200,
     });
@@ -357,8 +337,6 @@ document.addEventListener("DOMContentLoaded", () => {
     socket.emit("sendReady", { ready: true });
     ready.style.display = "none";
   });
-
-  socket.emit("getRoomData", null);
 
   socket.on("gridPlayer2", (newGrid) => {
     newGrid = toDOM(newGrid);
