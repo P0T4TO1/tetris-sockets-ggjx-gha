@@ -2,7 +2,6 @@ module.exports = (httpServer) => {
   const { Server } = require("socket.io");
   const io = new Server(httpServer);
 
-  // let usersReady = 0;
   io.on("connection", (socket) => {
     console.log("Un jugador se ha conectado! " + socket.id);
 
