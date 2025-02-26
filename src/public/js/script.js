@@ -1,27 +1,27 @@
-import { toDOM, toJSON } from "./domToJson.js";
+import { toDOM, toJSON } from './domToJson.js';
 
 const socket = io();
 
-document.addEventListener("DOMContentLoaded", () => {
-  const grid = document.querySelector(".grid");
-  const gridP2 = document.querySelector(".grid2");
-  const miniGrid = document.querySelector(".mini-grid");
-  const miniGridP2 = document.querySelector(".mini-grid2");
-  let squares = Array.from(document.querySelectorAll(".grid div"));
-  const scoreDisplay = document.querySelector("#score");
-  const scoreDisplayP2 = document.querySelector("#scoreP2");
-  const instructions = document.querySelector("#txtInstructions");
-  const username = document.cookie.split("username=")[1].split(";")[0];
-  const roomName = document.cookie.split("roomName=")[1].split(";")[0];
-  const ready = document.querySelector("#readyButton");
+document.addEventListener('DOMContentLoaded', () => {
+  const grid = document.querySelector('.grid');
+  const gridP2 = document.querySelector('.grid2');
+  const miniGrid = document.querySelector('.mini-grid');
+  const miniGridP2 = document.querySelector('.mini-grid2');
+  let squares = Array.from(document.querySelectorAll('.grid div'));
+  const scoreDisplay = document.querySelector('#score');
+  const scoreDisplayP2 = document.querySelector('#scoreP2');
+  const instructions = document.querySelector('#txtInstructions');
+  const username = document.cookie.split('username=')[1].split(';')[0];
+  const roomName = document.cookie.split('roomName=')[1].split(';')[0];
+  const ready = document.querySelector('#readyButton');
 
-  socket.emit("joinRoom", { username, roomName });
+  socket.emit('joinRoom', { username, roomName });
 
   const width = 10;
   let nextRandom = 0;
   let timerId;
   let score = 0;
-  const colors = ["orange", "red", "purple", "green", "blue"];
+  const colors = ['orange', 'red', 'purple', 'green', 'blue'];
 
   // Formas
   const lTetromino = [
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Dibujar figura
   function draw() {
     current.forEach((index) => {
-      squares[currentPosition + index].classList.add("tetromino");
+      squares[currentPosition + index].classList.add('tetromino');
       squares[currentPosition + index].style.backgroundColor = colors[random];
       squares[currentPosition + index].style.borderColor = colors[random];
     });
@@ -86,8 +86,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Borrar figura
   function undraw() {
     current.forEach((index) => {
-      squares[currentPosition + index].classList.remove("tetromino");
-      squares[currentPosition + index].style.backgroundColor = "";
+      squares[currentPosition + index].classList.remove('tetromino');
+      squares[currentPosition + index].style.backgroundColor = '';
     });
   }
 
@@ -101,6 +101,8 @@ document.addEventListener("DOMContentLoaded", () => {
       moveRight();
     } else if (e.keyCode === 40) {
       moveDown();
+    } else if (e.keyCode === 32) {
+      spaceBar();
     }
   }
 
@@ -110,19 +112,19 @@ document.addEventListener("DOMContentLoaded", () => {
     currentPosition += width;
     draw();
     freeze();
-    socket.emit("sendGrid", toJSON(grid));
-    socket.emit("sendScore", scoreDisplay.innerHTML);
+    socket.emit('sendGrid', toJSON(grid));
+    socket.emit('sendScore', scoreDisplay.innerHTML);
   }
 
   // Congelar figuras
   function freeze() {
     if (
       current.some((index) =>
-        squares[currentPosition + index + width].classList.contains("taken")
+        squares[currentPosition + index + width].classList.contains('taken')
       )
     ) {
       current.forEach((index) =>
-        squares[currentPosition + index].classList.add("taken")
+        squares[currentPosition + index].classList.add('taken')
       );
 
       random = nextRandom;
@@ -145,14 +147,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!isAtLeftEdge) currentPosition -= 1;
     if (
       current.some((index) =>
-        squares[currentPosition + index].classList.contains("taken")
+        squares[currentPosition + index].classList.contains('taken')
       )
     ) {
       currentPosition += 1;
     }
     draw();
-    socket.emit("sendGrid", toJSON(grid));
-    socket.emit("sendScore", scoreDisplay.innerHTML);
+    socket.emit('sendGrid', toJSON(grid));
+    socket.emit('sendScore', scoreDisplay.innerHTML);
   }
 
   // Mover figura a la derecha si es posible
@@ -164,14 +166,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!isAtRightEdge) currentPosition += 1;
     if (
       current.some((index) =>
-        squares[currentPosition + index].classList.contains("taken")
+        squares[currentPosition + index].classList.contains('taken')
       )
     ) {
       currentPosition -= 1;
     }
     draw();
-    socket.emit("sendGrid", toJSON(grid));
-    socket.emit("sendScore", scoreDisplay.innerHTML);
+    socket.emit('sendGrid', toJSON(grid));
+    socket.emit('sendScore', scoreDisplay.innerHTML);
   }
 
   function isAtRight() {
@@ -207,11 +209,11 @@ document.addEventListener("DOMContentLoaded", () => {
     current = theTetrominoes[random][currentRotation];
     checkRotatedPosition();
     draw();
-    socket.emit("sendGrid", toJSON(grid));
-    socket.emit("sendScore", scoreDisplay.innerHTML);
+    socket.emit('sendGrid', toJSON(grid));
+    socket.emit('sendScore', scoreDisplay.innerHTML);
   }
 
-  const displaySquares = document.querySelectorAll(".mini-grid div");
+  const displaySquares = document.querySelectorAll('.mini-grid div');
   const displayWidth = 4;
   const displayIndex = 0;
 
@@ -227,27 +229,28 @@ document.addEventListener("DOMContentLoaded", () => {
   // Para las figuras que vienen
   function displayShape() {
     displaySquares.forEach((square) => {
-      square.classList.remove("tetromino");
-      square.style.backgroundColor = "";
+      square.classList.remove('tetromino');
+      square.style.backgroundColor = '';
     });
     upNextTetrominoes[nextRandom].forEach((index) => {
-      displaySquares[displayIndex + index].classList.add("tetromino");
+      displaySquares[displayIndex + index].classList.add('tetromino');
       displaySquares[displayIndex + index].style.backgroundColor =
         colors[nextRandom];
       displaySquares[displayIndex + index].style.borderColor =
         colors[nextRandom];
     });
-    socket.emit("sendMiniGrid", toJSON(miniGrid));
+    socket.emit('sendMiniGrid', toJSON(miniGrid));
   }
 
   // Reconocer mensjae startGame para empezar el juego
-  socket.on("startGame", function () {
+  socket.on('startGame', function () {
+    ready.classList.remove('d-none');
     if (timerId) {
       clearInterval(timerId);
       timerId = null;
     } else {
-      document.addEventListener("keyup", control);
-      instructions.style.display = "none";
+      document.addEventListener('keyup', control);
+      instructions.style.display = 'none';
       draw();
       timerId = setInterval(moveDown, 800);
       nextRandom = Math.floor(Math.random() * theTetrominoes.length);
@@ -271,13 +274,13 @@ document.addEventListener("DOMContentLoaded", () => {
         i + 9,
       ];
 
-      if (row.every((index) => squares[index].classList.contains("taken"))) {
+      if (row.every((index) => squares[index].classList.contains('taken'))) {
         score += 10;
         scoreDisplay.innerHTML = score;
         row.forEach((index) => {
-          squares[index].classList.remove("taken");
-          squares[index].classList.remove("tetromino");
-          squares[index].style.backgroundColor = "";
+          squares[index].classList.remove('taken');
+          squares[index].classList.remove('tetromino');
+          squares[index].style.backgroundColor = '';
         });
         const squaresRemoved = squares.splice(i, width);
         squares = squaresRemoved.concat(squares);
@@ -286,71 +289,122 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function spaceBar() {
+    let i = 0;
+    while (
+      !current.some((index) =>
+        squares[currentPosition + index + i].classList.contains('taken')
+      )
+    ) {
+      i += width;
+    }
+    undraw();
+    currentPosition += i - width;
+    draw();
+    freeze();
+    socket.emit('sendGrid', toJSON(grid));
+    socket.emit('sendScore', scoreDisplay.innerHTML);
+  }
+
   // Game Over
   function gameOver() {
     if (
       current.some((index) =>
-        squares[currentPosition + index].classList.contains("taken")
+        squares[currentPosition + index].classList.contains('taken')
       )
     ) {
-      document.removeEventListener("keyup", control);
+      document.removeEventListener('keyup', control);
       clearInterval(timerId);
       Swal.fire({
-        title: "Game Over",
-        text: "Juego terminado",
+        title: 'Game Over',
+        text: 'Perdiste',
         imageUrl:
-          "https://i.gifer.com/origin/81/81ab221b64e4bdbc3c32079af661d69c_w200.gif",
+          'https://i.gifer.com/origin/81/81ab221b64e4bdbc3c32079af661d69c_w200.gif',
         imageWidth: 300,
         imageHeight: 250,
       });
+      socket.emit('gameOverAll', { roomName });
     }
   }
 
-  socket.on("reloadAll", () => {
+  socket.on('reloadAll', () => {
     location.reload();
   });
 
   // end game
-  socket.on("endGame", () => {
+  socket.on('endGame', () => {
     gameOver();
   });
 
-  socket.on("messageConnected", (message) => {
+  socket.on('messageConnected', (message) => {
     console.log(message);
   });
 
-  socket.on("messageDisconnected", (message) => {
+  socket.on('messageDisconnected', (message) => {
     console.log(message);
   });
 
-  socket.on("fullRoom", () => {
+  socket.on('playerDisconnected', (message) => {
     Swal.fire({
-      title: "Sala llena",
-      text: "La sala esta llena",
-      imageUrl: "/images/thegrefg.gif",
+      title: 'Jugador desconectado',
+      text: message.text,
+      imageUrl: '/images/thegrefg.gif',
       imageWidth: 300,
       imageHeight: 200,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        location.reload();
+      }
     });
   });
 
-  ready.addEventListener("click", () => {
-    socket.emit("sendReady", { ready: true });
-    ready.style.display = "none";
+  socket.on('gameWinner', (data) => {
+    Swal.fire({
+      title: 'Ganador',
+      text: 'Ganaste',
+      imageUrl: '/images/thegrefg.gif',
+      imageWidth: 300,
+      imageHeight: 200,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        location.reload();
+      }
+    });
   });
 
-  socket.on("gridPlayer2", (newGrid) => {
+  socket.on('fullRoom', () => {
+    Swal.fire({
+      title: 'Sala llena',
+      text: 'La sala esta llena',
+      imageUrl: '/images/thegrefg.gif',
+      imageWidth: 300,
+      imageHeight: 200,
+      confirmButtonText: 'Salir',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        location.href = '/logout';
+      }
+    });
+  });
+
+  ready.addEventListener('click', () => {
+    socket.emit('sendReady', { ready: true });
+    ready.style.display = 'none';
+  });
+
+  socket.on('gridPlayer2', (newGrid) => {
     newGrid = toDOM(newGrid);
-    newGrid.className = "grid2";
+    newGrid.className = 'grid2';
     gridP2.innerHTML = newGrid.innerHTML;
   });
 
-  socket.on("scorePlayer2", (newScore) => {
+  socket.on('scorePlayer2', (newScore) => {
     scoreDisplayP2.innerHTML = newScore;
   });
 
-  socket.on("miniGridPlayer2", (newMiniGrid) => {
+  socket.on('miniGridPlayer2', (newMiniGrid) => {
     newMiniGrid = toDOM(newMiniGrid);
-    newMiniGrid.className = "mini-grid2";
+    newMiniGrid.className = 'mini-grid2';
     miniGridP2.innerHTML = newMiniGrid.innerHTML;
   });
 });
